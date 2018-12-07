@@ -10,11 +10,20 @@ using System.Windows.Forms;
 
 namespace EduQuizzer
 {
-    public partial class Form1 : Form
+    public partial class RunQuizForm : Form
     {
-        public Form1()
+        public Quiz RunQuiz { get; set; }
+
+        public RunQuizForm(Quiz q)
         {
             InitializeComponent();
+
+            RunQuiz = q;
+        }
+
+        private void RunQuizForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
