@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckBoxGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NewQuestionForm.cs">
       <SubType>Form</SubType>
     </Compile>

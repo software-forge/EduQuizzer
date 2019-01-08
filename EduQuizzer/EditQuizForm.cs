@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -6,55 +7,86 @@ namespace EduQuizzer
 {
     public partial class EditQuizForm : Form
     {
-        /*
-            Quiz aktualnie edytowany 
-        */
+        // Quiz aktualnie edytowany
         public Quiz EditedQuiz { get; private set; }
-        public int EditedQuestion { get; set; }
 
-        private int SelectedQuestionIndex { get; set; }
+        // Indeks aktualnie edytowanego pytania
+        public int EditedQuestionIndex { get; set; }
 
         private NewQuestionForm NewQuestionForm;
-
-        /*
-            Parametry nowego pytania 
-        */
+        
+        // Parametry nowego pytania 
         public int QuestionType { get; set; }
         public int AnswersCount { get; set; }
+
+        // Obiekty interfejsu użytkownika należące do panelu edycji pytania 
+        private TextBox ContentBox { get; set; }
+        private List <TextBox> AnswerBoxes { get; set; }
+        private CheckBoxGroup CheckBoxGroup { get; set; }
 
         public EditQuizForm(Quiz q)
         {
             InitializeComponent();
+
             EditedQuiz = q;
-
-            QuestionType = 0;
-            AnswersCount = 3;
+            EditedQuestionIndex = -1; // Wartość domyślna, żaden element listy nie zaznaczony
         }
 
-        private void QuizEditorForm_Load(object sender, EventArgs e)
+        /*
+            Metody obsługi zdarzeń kontrolek formularza 
+        */
+
+        // DONE
+        private void QuizEditorFormLoad(object sender, EventArgs e)
         {
-            // Wypełnienie formularza zgodnie z wartościami elementów obiektu EditedQuiz
             QuizTitleBox.Text = EditedQuiz.Title;
-            SelectedQuestionIndex = 0;
             RefreshListView();
-        }
-
-        private void QuestionsList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (QuestionsList.SelectedIndices.Count > 0)
-                SelectedQuestionIndex = QuestionsList.SelectedIndices[0];
-            else
-                SelectedQuestionIndex = 0;
             RefreshLabel();
+            RefreshQuestionPanel();
         }
 
-        private void RemoveQuestionButton_Click(object sender, EventArgs e)
+        // DONE
+        private void QuizEditorFormClosing(object sender, FormClosingEventArgs e)
         {
-
+            UpdateQuizData();
         }
 
-        private void AddQuestionButton_Click(object sender, EventArgs e)
+        // DONE
+        private void QuestionsListSelectedIndexChanged(object sender, EventArgs e)
         {
+            UpdateQuizData();
+
+            if (QuestionsList.SelectedIndices.Count > 0)
+                EditedQuestionIndex = QuestionsList.SelectedIndices[0];
+            else
+                EditedQuestionIndex = -1;
+
+            RefreshLabel();
+            RefreshQuestionPanel();
+        }
+
+        // DONE
+        private void RemoveQuestionButtonClick(object sender, EventArgs e)
+        {
+            if(EditedQuestionIndex > -1)
+            {
+                EditedQuiz.Questions.RemoveAt(EditedQuestionIndex);
+                EditedQuestionIndex = -1;
+
+                for (int i = 0; i < EditedQuiz.NumOfQuestions; i++)
+                    EditedQuiz.Questions[i].Number = i + 1;
+
+                RefreshListView();
+                RefreshLabel();
+                RefreshQuestionPanel();
+            }
+        }
+
+        // DONE
+        private void AddQuestionButtonClick(object sender, EventArgs e)
+        {
+            UpdateQuizData();
+
             NewQuestionForm = new NewQuestionForm();
             NewQuestionForm.FormClosing += AddQuestion;
 
@@ -62,28 +94,133 @@ namespace EduQuizzer
             NewQuestionForm.Show();
         }
 
-        private void RefreshLabel()
+        // DONE
+        private void SaveQuizButtonClick(object sender, EventArgs e)
         {
-            SelectedQuestionLabel.Text = string.Format("Pytanie: {0}", EditedQuiz.Questions[SelectedQuestionIndex].Number);
+            UpdateQuizData();
+            Close();
         }
 
+        /*
+            Metody prywatne odświeżające elementy interfejsu 
+        */
+
+        // DONE
+        private void RefreshLabel()
+        {
+            if (EditedQuiz.Questions.Count == 0)
+                SelectedQuestionLabel.Text = "Brak pytań";
+            else if (EditedQuestionIndex == -1)
+                SelectedQuestionLabel.Text = "Pytanie:";
+            else
+                SelectedQuestionLabel.Text = string.Format("Pytanie: {0}", EditedQuiz.Questions[EditedQuestionIndex].Number);
+        }
+
+        // DONE
         private void RefreshListView()
         {
             QuestionsList.Items.Clear();
+
             foreach (Question q in EditedQuiz.Questions)
-                QuestionsList.Items.Add(Convert.ToString(q.Number));
+                QuestionsList.Items.Add(string.Format("Pytanie {0}", q.Number));
+
             QuestionsList.Refresh();
         }
 
+        // DONE
         private void RefreshQuestionPanel()
         {
-            /* 
-                TODO - zapełnienie panelu edycji w zależności od zaznaczonego na liście pytania
-            */
+            EditQuestionPanel.Controls.Clear();
 
+            // Żadne pytanie nie jest zaznaczone
+            if (EditedQuestionIndex == -1)
+                return;
+
+            // Nie ma żadnych pytań
+            if (EditedQuiz.NumOfQuestions == 0)
+                return;
+
+            Question q = EditedQuiz.Questions[EditedQuestionIndex];
+
+            ContentBox = new TextBox();
+            ContentBox.Text = q.Content;
+            ContentBox.Left = 10;
+            ContentBox.Top = 10;
+            ContentBox.Multiline = true;
+            ContentBox.Width = 420;
+            ContentBox.Height = 100;
+            EditQuestionPanel.Controls.Add(ContentBox);
+
+            AnswerBoxes = new List <TextBox> (q.AnswersCapacity);
+
+            int answerbox_top = 90;
+            for(int i = 0; i < q.AnswersCapacity; i++)
+            {
+                TextBox t = new TextBox();
+                t.Top = (answerbox_top += 30);
+                t.Left = 10;
+                t.Width = 380;
+                t.Text = q.Answers[i];
+
+                if (q is BinaryQuestion)
+                    t.Enabled = false;
+                    
+                AnswerBoxes.Add(t);
+            }   
+
+            if(q is MultiSelectionQuestion)
+            {
+                CheckBoxGroup = new CheckBoxGroup(q.AnswersCapacity, q.CorrectAnswers, CheckBoxGroupBehavior.MULTI_SELECTION);
+
+                //Debug.Write("Indices passed to CheckBox group: ");
+                //foreach (int i in CheckBoxGroup.SelectedIndices)
+                //    Debug.Write(string.Format("{0} ", i));
+                //Debug.WriteLine("");
+            }
+
+            if(q is SingleSelectionQuestion || q is BinaryQuestion)
+            {
+                CheckBoxGroup = new CheckBoxGroup(q.AnswersCapacity, q.CorrectAnswers, CheckBoxGroupBehavior.SINGLE_SELECTION);
+            }
+
+            // Dodanie kontrolek do panelu
+
+            EditQuestionPanel.Controls.Add(ContentBox);
+
+            for(int i = 0; i < q.AnswersCapacity; i++)
+                EditQuestionPanel.Controls.Add(AnswerBoxes[i]);
+
+            CheckBoxGroup.AddToPanel(EditQuestionPanel, 400, 90, 30);
         }
 
-        private void AddQuestion(Object sender, FormClosingEventArgs e)
+        // DONE
+        private void UpdateQuizData()
+        {
+            EditedQuiz.Title = QuizTitleBox.Text;
+
+            // Żadne pytanie nie jest zaznaczone
+            if (EditedQuestionIndex == -1)
+                return;
+
+            // Nie ma żadnych pytań
+            if (EditedQuiz.NumOfQuestions == 0)
+                return;
+
+            EditedQuiz.Questions[EditedQuestionIndex].Content = ContentBox.Text;
+
+            for (int i = 0; i < AnswerBoxes.Count; i++)
+                EditedQuiz.Questions[EditedQuestionIndex].SetAnswer(AnswerBoxes[i].Text, i);
+
+            EditedQuiz.Questions[EditedQuestionIndex].CorrectAnswers = CheckBoxGroup.SelectedIndices;
+
+            //Debug.Write("Indices selected in CheckBox group: ");
+            //foreach (int i in CheckBoxGroup.SelectedIndices)
+            //    Debug.Write(string.Format("{0} ", i));
+            //Debug.WriteLine("");
+        }
+
+        // DONE
+        private void AddQuestion(object sender, FormClosingEventArgs e)
         {
             if (NewQuestionForm.Cancelled)
                 return;
@@ -91,40 +228,30 @@ namespace EduQuizzer
             QuestionType = NewQuestionForm.QuestionType;
             AnswersCount = NewQuestionForm.AnswerCount;
 
+            Question q;
+
             switch(QuestionType)
             {
                 case 0:
-                    EditedQuiz.Questions.Add(new SingleSelectionQuestion(AnswersCount, 0));
+                    q = new SingleSelectionQuestion(AnswersCount);
+                    q.Number = EditedQuiz.Questions.Count + 1;
+                    EditedQuiz.Questions.Add(q);
                     break;
                 case 1:
-                    EditedQuiz.Questions.Add(new MultiSelectionQuestion(AnswersCount));
+                    q = new MultiSelectionQuestion(AnswersCount);
+                    q.Number = EditedQuiz.Questions.Count + 1;
+                    EditedQuiz.Questions.Add(q);
                     break;
                 case 2:
-                    EditedQuiz.Questions.Add(new BinaryQuestion(false));
+                    q = new BinaryQuestion();
+                    q.Number = EditedQuiz.Questions.Count + 1;
+                    EditedQuiz.Questions.Add(q);
                     break;
             }
 
-            EditedQuestion = EditedQuiz.Questions.Count - 1;
-            EditedQuiz.Questions[EditedQuestion].Number = EditedQuestion + 1;
-
-            RefreshListView();
-            RefreshQuestionPanel();
-
             Show();
+            RefreshListView();
+            RefreshLabel();
         }
-
-        private void SaveQuizButton_Click(object sender, EventArgs e)
-        {
-            // Zapisanie danych z elementów formularza do pól obiektu
-            if (QuizTitleBox.Text.Equals(""))
-                EditedQuiz.Title = "<nowy quiz>";
-            else
-                EditedQuiz.Title = QuizTitleBox.Text;
-
-            // Zamknięcie formularza
-            Close();
-        }
-
-
     }
 }

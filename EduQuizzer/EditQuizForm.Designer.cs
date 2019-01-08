@@ -36,19 +36,19 @@
             this.AddQuestionButton = new System.Windows.Forms.Button();
             this.RemoveQuestionButton = new System.Windows.Forms.Button();
             this.EditQuestionPanel = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.ContentLabel = new System.Windows.Forms.Label();
             this.SelectedQuestionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // SaveQuizButton
             // 
-            this.SaveQuizButton.Location = new System.Drawing.Point(546, 316);
+            this.SaveQuizButton.Location = new System.Drawing.Point(542, 27);
             this.SaveQuizButton.Name = "SaveQuizButton";
             this.SaveQuizButton.Size = new System.Drawing.Size(75, 23);
             this.SaveQuizButton.TabIndex = 0;
             this.SaveQuizButton.Text = "Zapisz";
             this.SaveQuizButton.UseVisualStyleBackColor = true;
-            this.SaveQuizButton.Click += new System.EventHandler(this.SaveQuizButton_Click);
+            this.SaveQuizButton.Click += new System.EventHandler(this.SaveQuizButtonClick);
             // 
             // label1
             // 
@@ -80,52 +80,51 @@
             this.QuestionsList.Location = new System.Drawing.Point(16, 73);
             this.QuestionsList.MultiSelect = false;
             this.QuestionsList.Name = "QuestionsList";
-            this.QuestionsList.Size = new System.Drawing.Size(145, 191);
+            this.QuestionsList.Size = new System.Drawing.Size(145, 251);
             this.QuestionsList.TabIndex = 4;
             this.QuestionsList.UseCompatibleStateImageBehavior = false;
-            this.QuestionsList.SelectedIndexChanged += new System.EventHandler(this.QuestionsList_SelectedIndexChanged);
+            this.QuestionsList.SelectedIndexChanged += new System.EventHandler(this.QuestionsListSelectedIndexChanged);
             // 
             // AddQuestionButton
             // 
-            this.AddQuestionButton.Location = new System.Drawing.Point(91, 287);
+            this.AddQuestionButton.Location = new System.Drawing.Point(91, 358);
             this.AddQuestionButton.Name = "AddQuestionButton";
             this.AddQuestionButton.Size = new System.Drawing.Size(70, 23);
             this.AddQuestionButton.TabIndex = 5;
             this.AddQuestionButton.Text = "+";
             this.AddQuestionButton.UseVisualStyleBackColor = true;
-            this.AddQuestionButton.Click += new System.EventHandler(this.AddQuestionButton_Click);
+            this.AddQuestionButton.Click += new System.EventHandler(this.AddQuestionButtonClick);
             // 
             // RemoveQuestionButton
             // 
-            this.RemoveQuestionButton.Location = new System.Drawing.Point(12, 287);
+            this.RemoveQuestionButton.Location = new System.Drawing.Point(16, 358);
             this.RemoveQuestionButton.Name = "RemoveQuestionButton";
             this.RemoveQuestionButton.Size = new System.Drawing.Size(70, 23);
             this.RemoveQuestionButton.TabIndex = 6;
             this.RemoveQuestionButton.Text = "-";
             this.RemoveQuestionButton.UseVisualStyleBackColor = true;
-            this.RemoveQuestionButton.Click += new System.EventHandler(this.RemoveQuestionButton_Click);
+            this.RemoveQuestionButton.Click += new System.EventHandler(this.RemoveQuestionButtonClick);
             // 
             // EditQuestionPanel
             // 
             this.EditQuestionPanel.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.EditQuestionPanel.Location = new System.Drawing.Point(168, 73);
             this.EditQuestionPanel.Name = "EditQuestionPanel";
-            this.EditQuestionPanel.Size = new System.Drawing.Size(453, 237);
+            this.EditQuestionPanel.Size = new System.Drawing.Size(453, 308);
             this.EditQuestionPanel.TabIndex = 7;
             // 
-            // label3
+            // ContentLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(165, 56);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Edycja pytania";
+            this.ContentLabel.AutoSize = true;
+            this.ContentLabel.Location = new System.Drawing.Point(165, 56);
+            this.ContentLabel.Name = "ContentLabel";
+            this.ContentLabel.Size = new System.Drawing.Size(0, 13);
+            this.ContentLabel.TabIndex = 8;
             // 
             // SelectedQuestionLabel
             // 
             this.SelectedQuestionLabel.AutoSize = true;
-            this.SelectedQuestionLabel.Location = new System.Drawing.Point(16, 271);
+            this.SelectedQuestionLabel.Location = new System.Drawing.Point(16, 327);
             this.SelectedQuestionLabel.Name = "SelectedQuestionLabel";
             this.SelectedQuestionLabel.Size = new System.Drawing.Size(0, 13);
             this.SelectedQuestionLabel.TabIndex = 9;
@@ -134,9 +133,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(629, 345);
+            this.ClientSize = new System.Drawing.Size(629, 393);
             this.Controls.Add(this.SelectedQuestionLabel);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.ContentLabel);
             this.Controls.Add(this.EditQuestionPanel);
             this.Controls.Add(this.RemoveQuestionButton);
             this.Controls.Add(this.AddQuestionButton);
@@ -145,11 +144,13 @@
             this.Controls.Add(this.QuizTitleBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.SaveQuizButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EditQuizForm";
             this.Text = "Edycja quizu";
-            this.Load += new System.EventHandler(this.QuizEditorForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuizEditorFormClosing);
+            this.Load += new System.EventHandler(this.QuizEditorFormLoad);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,7 +166,7 @@
         private System.Windows.Forms.Button AddQuestionButton;
         private System.Windows.Forms.Button RemoveQuestionButton;
         private System.Windows.Forms.Panel EditQuestionPanel;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label ContentLabel;
         private System.Windows.Forms.Label SelectedQuestionLabel;
     }
 }

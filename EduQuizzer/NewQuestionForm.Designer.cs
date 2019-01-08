@@ -48,7 +48,7 @@
             this.questionTypeBox.Name = "questionTypeBox";
             this.questionTypeBox.Size = new System.Drawing.Size(140, 21);
             this.questionTypeBox.TabIndex = 0;
-            this.questionTypeBox.SelectedIndexChanged += new System.EventHandler(this.QuestionTypeBox_SelectedIndexChanged);
+            this.questionTypeBox.SelectedIndexChanged += new System.EventHandler(this.QuestionTypeBoxSelectedIndexChanged);
             // 
             // answersNumberBox
             // 
@@ -71,7 +71,7 @@
             0,
             0,
             0});
-            this.answersNumberBox.ValueChanged += new System.EventHandler(this.AnswersNumberBox_ValueChanged);
+            this.answersNumberBox.ValueChanged += new System.EventHandler(this.AnswersNumberBoxValueChanged);
             // 
             // label1
             // 
@@ -99,7 +99,7 @@
             this.cancelButton.TabIndex = 4;
             this.cancelButton.Text = "Anuluj";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.CancelButtonClick);
             // 
             // AddButton
             // 
@@ -109,7 +109,7 @@
             this.AddButton.TabIndex = 5;
             this.AddButton.Text = "Dodaj";
             this.AddButton.UseVisualStyleBackColor = true;
-            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
+            this.AddButton.Click += new System.EventHandler(this.AddButtonClick);
             // 
             // EditQuestionForm
             // 
@@ -130,7 +130,7 @@
             this.ShowInTaskbar = false;
             this.Text = "Dodawanie pytania";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.EditQuestionForm_Load);
+            this.Load += new System.EventHandler(this.EditQuestionFormLoad);
             ((System.ComponentModel.ISupportInitialize)(this.answersNumberBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

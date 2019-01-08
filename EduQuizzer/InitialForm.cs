@@ -25,22 +25,22 @@ namespace EduQuizzer
             Obsługa podstawowych zdarzeń formularza 
         */
 
-        private void InitialForm_Closed(object sender, FormClosedEventArgs e)
+        private void InitialFormClosed(object sender, FormClosedEventArgs e)
         {
 
         }
 
-        private void InitialForm_Closing(object sender, FormClosingEventArgs e)
+        private void InitialFormClosing(object sender, FormClosingEventArgs e)
         {
 
         }
 
-        private void InitialForm_Load(object sender, EventArgs e)
+        private void InitialFormLoad(object sender, EventArgs e)
         {
             
         }
 
-        private void InitialForm_Shown(object sender, EventArgs e)
+        private void InitialFormShown(object sender, EventArgs e)
         {
 
         }
@@ -49,12 +49,12 @@ namespace EduQuizzer
             Obsługa zdarzeń kontrolek 
         */
 
-        private void RunQuizButton_Click(object sender, EventArgs e)
+        private void RunQuizButtonClick(object sender, EventArgs e)
         {
 
         }
 
-        private void EditQuizButton_Click(object sender, EventArgs e)
+        private void EditQuizButtonClick(object sender, EventArgs e)
         {
             if (Quizzes.Count < 1)
                 return;
@@ -65,7 +65,7 @@ namespace EduQuizzer
             editForm.Show();
         }
 
-        private void DeleteQuizButton_Click(object sender, EventArgs e)
+        private void DeleteQuizButtonClick(object sender, EventArgs e)
         {
             if (Quizzes.Count < 1)
                 return;
@@ -84,22 +84,24 @@ namespace EduQuizzer
             }
         }
 
-        private void AddQuizButton_Click(object sender, EventArgs e)
+        private void AddQuizButtonClick(object sender, EventArgs e)
         {
-            Hide();
             Quizzes.Add(new Quiz());
             SelectedQuiz = Quizzes.Count - 1;
+
+            Hide();
             EditQuizForm addForm = new EditQuizForm(Quizzes[SelectedQuiz]);
             addForm.FormClosed += BackToInitialForm;
             addForm.Show();
         }
 
-        private void QuizzesList_SelectedIndexChanged(object sender, EventArgs e)
+        private void QuizzesListSelectedIndexChanged(object sender, EventArgs e)
         {
             if (QuizzesList.SelectedIndices.Count > 0)
                 SelectedQuiz = QuizzesList.SelectedIndices[0];
             else
                 SelectedQuiz = 0;
+
             RefreshLabel();
         }
 
@@ -118,8 +120,10 @@ namespace EduQuizzer
         private void RefreshListView()
         {
             QuizzesList.Items.Clear();
+
             foreach (Quiz q in Quizzes)
                 QuizzesList.Items.Add(q.Title);
+
             QuizzesList.Refresh();
         }
 

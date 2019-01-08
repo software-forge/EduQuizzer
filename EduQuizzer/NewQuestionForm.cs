@@ -29,7 +29,7 @@ namespace EduQuizzer
             Cancelled = false;
         }
 
-        private void EditQuestionForm_Load(object sender, EventArgs e)
+        private void EditQuestionFormLoad(object sender, EventArgs e)
         {
             questionTypeBox.SelectedIndex = QuestionType;
             SetAnswersNumberBox();
@@ -60,24 +60,24 @@ namespace EduQuizzer
             }
         }
 
-        private void QuestionTypeBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void QuestionTypeBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             QuestionType = questionTypeBox.SelectedIndex;
             SetAnswersNumberBox();
         }
 
-        private void AnswersNumberBox_ValueChanged(object sender, EventArgs e)
+        private void AnswersNumberBoxValueChanged(object sender, EventArgs e)
         {
             AnswerCount = (int) answersNumberBox.Value;
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        private void CancelButtonClick(object sender, EventArgs e)
         {
             Cancelled = true;
             Close();
         }
 
-        private void AddButton_Click(object sender, EventArgs e)
+        private void AddButtonClick(object sender, EventArgs e)
         {
             Cancelled = false;
             Close();
