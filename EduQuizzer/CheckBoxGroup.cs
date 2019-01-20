@@ -84,7 +84,6 @@ namespace EduQuizzer
             }
         }
 
-        // DONE
         private void MultiSelectionChanged(object sender, EventArgs e)
         {
 
@@ -99,7 +98,6 @@ namespace EduQuizzer
             //Debug.WriteLine("");
         }
 
-        // DONE
         private void SingleSelectionChanged(object sender, EventArgs e)
         {
             SelectedIndices.Clear();
@@ -139,7 +137,6 @@ namespace EduQuizzer
             //Debug.WriteLine("");
         }
 
-        // DONE
         public void AddToPanel(Panel p, int left, int top, int offset)
         {
             foreach(GroupedCheckBox g in CheckBoxes)

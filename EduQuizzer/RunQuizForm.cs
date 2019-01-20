@@ -12,16 +12,18 @@ namespace EduQuizzer
 {
     public partial class RunQuizForm : Form
     {
-        public Quiz RunQuiz { get; set; }
+
+        private QuizProgressBar QuizProgressBar { get; set; }
 
         public RunQuizForm(Quiz q)
         {
             InitializeComponent();
 
-            RunQuiz = q;
+            QuizProgressBar = new QuizProgressBar(q);
+            Controls.Add(QuizProgressBar);
         }
 
-        private void RunQuizForm_Load(object sender, EventArgs e)
+        private void RunQuizFormLoad(object sender, EventArgs e)
         {
 
         }
