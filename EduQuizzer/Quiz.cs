@@ -67,7 +67,7 @@ namespace EduQuizzer
 
         // Lista indeksów odpowiedzi wskazanych jako poprawne
         protected List<int> _given_answers;
-        public abstract List<int> GivenAnswers { get; set; }
+        public abstract List <int> GivenAnswers { get; set; }
 
         public void SetAnswer(string answer, int index)
         {
@@ -243,7 +243,7 @@ namespace EduQuizzer
         }
 
         public List <Question> Questions { get; set; }
-        public int NumOfQuestions
+        public int QuestionsCount
         {
             get
             {

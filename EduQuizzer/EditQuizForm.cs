@@ -73,7 +73,7 @@ namespace EduQuizzer
                 EditedQuiz.Questions.RemoveAt(EditedQuestionIndex);
                 EditedQuestionIndex = -1;
 
-                for (int i = 0; i < EditedQuiz.NumOfQuestions; i++)
+                for (int i = 0; i < EditedQuiz.QuestionsCount; i++)
                     EditedQuiz.Questions[i].Number = i + 1;
 
                 RefreshListView();
@@ -137,7 +137,7 @@ namespace EduQuizzer
                 return;
 
             // Nie ma żadnych pytań
-            if (EditedQuiz.NumOfQuestions == 0)
+            if (EditedQuiz.QuestionsCount == 0)
                 return;
 
             Question q = EditedQuiz.Questions[EditedQuestionIndex];
@@ -203,7 +203,7 @@ namespace EduQuizzer
                 return;
 
             // Nie ma żadnych pytań
-            if (EditedQuiz.NumOfQuestions == 0)
+            if (EditedQuiz.QuestionsCount == 0)
                 return;
 
             EditedQuiz.Questions[EditedQuestionIndex].Content = ContentBox.Text;
