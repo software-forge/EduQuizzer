@@ -32,21 +32,23 @@ namespace EduQuizzer
 
         private void RunQuizFormLoad(object sender, EventArgs e)
         {
-            QuestionButtons.AddToPanel(ControlPanel, 0, 20, 10);
-            QuestionButtons.SelectionChanged += SelectedQuestionChanged;
+            QuestionButtons.AddToPanel(ControlPanel, 10);
+            QuestionButtons.SelectionChangedEvent += SelectedQuestionChanged;
         }
 
         // TODO - zapełnienie panelu QuestionPanel danymi dla pytania q.Questions[SelectedQuestion]
         private void ReloadQuestionPanel() {}
 
-        public void SelectedQuestionChanged(object sender, EventArgs e)
+        public void SelectedQuestionChanged(object sender, SelectedButtonChangedArgs e)
         {
-            ButtonGroup b = sender as ButtonGroup;
-            SelectedQuestion = b.SelectedIndex;
+            SelectedQuestion = e.Selection;
             ReloadQuestionPanel();
 
             if (Debugger.IsAttached)
-                Debug.WriteLine(string.Format("Zaznaczone pytanie: {0} (RunQuizForm)", SelectedQuestion));
+            {
+                Debug.WriteLine(string.Format("Indeks zaznaczonego przycisku: {0} (SelectedButtonChangedArgs)", e.Selection));
+                Debug.WriteLine(string.Format("Indeks zaznaczonego pytania: {0} (RunQuizForm)", SelectedQuestion));
+            }
         }
 
         private void NextButtonClicked(object sender, EventArgs e)
@@ -61,5 +63,6 @@ namespace EduQuizzer
 
         // TODO
         private void EndQuizButtonClicked(object sender, EventArgs e) {}
+
     }
 }

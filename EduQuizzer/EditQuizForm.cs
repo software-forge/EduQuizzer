@@ -85,13 +85,26 @@ namespace EduQuizzer
         // DONE
         private void AddQuestionButtonClick(object sender, EventArgs e)
         {
-            UpdateQuizData();
+            if(EditedQuiz.QuestionsCount < Quiz.MaxQuestions)
+            {
+                UpdateQuizData();
 
-            NewQuestionForm = new NewQuestionForm();
-            NewQuestionForm.FormClosing += AddQuestion;
+                NewQuestionForm = new NewQuestionForm();
+                NewQuestionForm.FormClosing += AddQuestion;
 
-            Hide();
-            NewQuestionForm.Show();
+                Hide();
+                NewQuestionForm.Show();
+            }
+            else
+            {
+            // TODO - jakiś dialog
+
+            if(Debugger.IsAttached)
+            {
+                Debug.WriteLine("Osiągnięto maksymalną ilość pytań!");
+            }
+            }
+            
         }
 
         // DONE

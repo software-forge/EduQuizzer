@@ -9,6 +9,16 @@ using System.Diagnostics;
 
 namespace EduQuizzer
 {
+    public class SelectedButtonChangedArgs : EventArgs
+    {
+        public int Selection { get; private set; }
+
+        public SelectedButtonChangedArgs(int selection) : base()
+        {
+            Selection = selection;
+        }
+    }
+
     public class GroupedButton : Button
     {
         public int Index { get; private set; }
@@ -33,7 +43,7 @@ namespace EduQuizzer
             Index = index;
             Selected = false;
 
-            Text = string.Format("{0}", Index);
+            Text = string.Format("{0}", Index + 1);
 
             MouseHover += OnHover;
             MouseLeave += OnLeave;
@@ -91,7 +101,8 @@ namespace EduQuizzer
             }
         }
 
-        public event EventHandler SelectionChanged;
+        public event EventHandler <SelectedButtonChangedArgs> SelectionChangedEvent;
+        public delegate void SelectedButtonChangedDelegate(object sender, SelectedButtonChangedArgs e);
 
         public ButtonGroup(int buttons)
         {
@@ -123,7 +134,7 @@ namespace EduQuizzer
                 Buttons[selected].Selected = false;
             Buttons[button].Selected = true;
             Repaint();
-            SelectionChanged.Invoke(this, new EventArgs());
+            SelectionChangedEvent.Invoke(this, new SelectedButtonChangedArgs(SelectedIndex));
         }
 
         public void SelectNext()
@@ -141,7 +152,7 @@ namespace EduQuizzer
                     Buttons[0].Selected = true;
                 }
                 Repaint();
-                SelectionChanged.Invoke(this, new EventArgs());
+                SelectionChangedEvent.Invoke(this, new SelectedButtonChangedArgs(SelectedIndex));
             }
         }
 
@@ -153,7 +164,7 @@ namespace EduQuizzer
                 Buttons[selected].Selected = false;
                 Buttons[selected - 1].Selected = true;
                 Repaint();
-                SelectionChanged.Invoke(this, new EventArgs());
+                SelectionChangedEvent.Invoke(this, new SelectedButtonChangedArgs(SelectedIndex));
             }
         }
 
@@ -163,12 +174,22 @@ namespace EduQuizzer
                 g.Repaint();
         }
 
-        public void AddToPanel(Panel p, int top, int left, int offset)
+        public void AddToPanel(Panel p, int top)
         {
+            const int button_w = 30;
+            const int button_h = 30;
+            const int offset = 1;
+
+            int group_w = (ButtonsCount * button_w) + (offset * (ButtonsCount - 1));
+            int left = ((p.Width / 2) - (group_w / 2));
+
             foreach(GroupedButton g in Buttons)
             {
-                g.Left = (left += (offset + g.Width));
                 g.Top = top;
+                g.Left = left;
+                left += button_w + offset;
+                g.Width = button_w;
+                g.Height = button_h;
                 p.Controls.Add(g);
             }
             Repaint();

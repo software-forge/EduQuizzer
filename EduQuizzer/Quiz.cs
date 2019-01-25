@@ -226,6 +226,8 @@ namespace EduQuizzer
 
     public class Quiz : IScorable
     {
+        public const int MaxQuestions = 30;
+
         private string _title;
         public string Title
         {
