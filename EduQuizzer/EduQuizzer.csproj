@@ -69,9 +69,7 @@
     <Compile Include="EditQuizForm.Designer.cs">
       <DependentUpon>EditQuizForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ActiveButtonGroup.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ButtonGroup.cs" />
     <Compile Include="RunQuizForm.cs">
       <SubType>Form</SubType>
     </Compile>

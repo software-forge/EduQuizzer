@@ -107,7 +107,7 @@
             // 
             // EditQuestionPanel
             // 
-            this.EditQuestionPanel.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.EditQuestionPanel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.EditQuestionPanel.Location = new System.Drawing.Point(168, 73);
             this.EditQuestionPanel.Name = "EditQuestionPanel";
             this.EditQuestionPanel.Size = new System.Drawing.Size(453, 308);
@@ -133,6 +133,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(629, 393);
             this.Controls.Add(this.SelectedQuestionLabel);
             this.Controls.Add(this.ContentLabel);

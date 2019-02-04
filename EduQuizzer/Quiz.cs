@@ -62,11 +62,11 @@ namespace EduQuizzer
         }
 
         // Lista indeksów poprawnych odpowiedzi
-        protected List <int> _correct_answers;
+        protected List <int> correct_answers;
         public abstract List <int> CorrectAnswers { get; set; }
 
         // Lista indeksów odpowiedzi wskazanych jako poprawne
-        protected List<int> _given_answers;
+        protected List<int> given_answers;
         public abstract List <int> GivenAnswers { get; set; }
 
         public void SetAnswer(string answer, int index)
@@ -85,7 +85,9 @@ namespace EduQuizzer
             Content = "Treść pytania...";
             Answers = new List <string> (answer_count);
             for (int i = 0; i < AnswersCapacity; i++)
+            {
                 Answers.Add(string.Format("Odpowiedź {0}", i + 1));
+            }
         }
 
         public abstract int Score();
@@ -97,29 +99,24 @@ namespace EduQuizzer
         {
             get
             {
-                return _correct_answers;
+                return correct_answers;
             }
             set
             {
                 if (value.Capacity <= AnswersCapacity && value.Count <= AnswersCount)
-                    _correct_answers = value;
+                    correct_answers = value;
             }
         }
         public override List <int> GivenAnswers
         {
             get
             {
-                return _given_answers;
+                return given_answers;
             }
             set
             {
                 if (value.Capacity <= AnswersCapacity && value.Count <= AnswersCount)
-                    _given_answers = value;
-
-                Debug.Write("Indices passed to property: ");
-                foreach (int i in value)
-                    Debug.Write(string.Format("{0} ", i));
-                Debug.WriteLine("");
+                    given_answers = value;
             }
         }
 
@@ -132,9 +129,20 @@ namespace EduQuizzer
         public override int Score()
         {
             int score = 0;
-            foreach(int givenAnswer in GivenAnswers)
-                if (CorrectAnswers.Contains(givenAnswer))
-                    score++;
+
+            if(GivenAnswers.Count > 0)
+            {
+                foreach (int givenAnswer in GivenAnswers)
+                {
+                    if (CorrectAnswers.Contains(givenAnswer))
+                        score++;
+                    else
+                        score--;
+                }
+
+                GivenAnswers.Clear();
+            }
+
             return score;
         }
     }
@@ -145,24 +153,24 @@ namespace EduQuizzer
         {
             get
             {
-                return _correct_answers;
+                return correct_answers;
             }
             set
             {
                 if (value.Capacity == 1)
-                    _correct_answers = value;
+                    correct_answers = value;
             }
         }
         public override List <int> GivenAnswers
         {
             get
             {
-                return _given_answers;
+                return given_answers;
             }
             set
             {
                 if (value.Capacity == 1)
-                    _given_answers = value;
+                    given_answers = value;
             }
         }
 
@@ -186,19 +194,21 @@ namespace EduQuizzer
             GivenAnswers = new List<int>(1);
         }
 
-        // TODO - Można uprościć
         public override int Score()
         {
+            int score = 0;
+
             if (GivenAnswers.Count == 1)
             {
                 if (CorrectAnswers.Contains(GivenAnswers[0]))
-                    return 1;
+                    score++;
                 else
-                    return 0;
+                    score--;
+
+                GivenAnswers.Clear();
             }
-             
-            // Nie udzielono odpowiedzi
-            return 0;
+
+            return score;
         }
     }
 
@@ -259,12 +269,25 @@ namespace EduQuizzer
             Questions = new List <Question>();
         }
 
+        public int MaxPoints()
+        {
+            int points = 0;
+
+            foreach(Question q in Questions)
+            {
+                points += q.CorrectAnswers.Count;
+            }
+
+            return points;
+        }
 
         public int Score()
         {
             int score = 0;
             foreach (Question q in Questions)
+            {
                 score += q.Score();
+            }
             return score;
         }
     }

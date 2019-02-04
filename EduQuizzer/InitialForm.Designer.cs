@@ -38,10 +38,9 @@
             // 
             // RunQuizButton
             // 
-            this.RunQuizButton.Location = new System.Drawing.Point(24, 454);
-            this.RunQuizButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.RunQuizButton.Location = new System.Drawing.Point(12, 236);
             this.RunQuizButton.Name = "RunQuizButton";
-            this.RunQuizButton.Size = new System.Drawing.Size(400, 44);
+            this.RunQuizButton.Size = new System.Drawing.Size(200, 23);
             this.RunQuizButton.TabIndex = 0;
             this.RunQuizButton.Text = "Uruchom";
             this.RunQuizButton.UseVisualStyleBackColor = true;
@@ -49,10 +48,9 @@
             // 
             // AddQuizButton
             // 
-            this.AddQuizButton.Location = new System.Drawing.Point(24, 621);
-            this.AddQuizButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.AddQuizButton.Location = new System.Drawing.Point(12, 323);
             this.AddQuizButton.Name = "AddQuizButton";
-            this.AddQuizButton.Size = new System.Drawing.Size(400, 44);
+            this.AddQuizButton.Size = new System.Drawing.Size(200, 23);
             this.AddQuizButton.TabIndex = 1;
             this.AddQuizButton.Text = "Dodaj quiz";
             this.AddQuizButton.UseVisualStyleBackColor = true;
@@ -62,11 +60,10 @@
             // 
             this.QuizzesList.Alignment = System.Windows.Forms.ListViewAlignment.Left;
             this.QuizzesList.HideSelection = false;
-            this.QuizzesList.Location = new System.Drawing.Point(24, 23);
-            this.QuizzesList.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.QuizzesList.Location = new System.Drawing.Point(12, 12);
             this.QuizzesList.MultiSelect = false;
             this.QuizzesList.Name = "QuizzesList";
-            this.QuizzesList.Size = new System.Drawing.Size(396, 381);
+            this.QuizzesList.Size = new System.Drawing.Size(200, 200);
             this.QuizzesList.TabIndex = 2;
             this.QuizzesList.UseCompatibleStateImageBehavior = false;
             this.QuizzesList.View = System.Windows.Forms.View.List;
@@ -74,10 +71,9 @@
             // 
             // EditQuizButton
             // 
-            this.EditQuizButton.Location = new System.Drawing.Point(24, 510);
-            this.EditQuizButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.EditQuizButton.Location = new System.Drawing.Point(12, 265);
             this.EditQuizButton.Name = "EditQuizButton";
-            this.EditQuizButton.Size = new System.Drawing.Size(400, 44);
+            this.EditQuizButton.Size = new System.Drawing.Size(200, 23);
             this.EditQuizButton.TabIndex = 3;
             this.EditQuizButton.Text = "Edytuj";
             this.EditQuizButton.UseVisualStyleBackColor = true;
@@ -85,10 +81,9 @@
             // 
             // DeleteQuizButton
             // 
-            this.DeleteQuizButton.Location = new System.Drawing.Point(24, 565);
-            this.DeleteQuizButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.DeleteQuizButton.Location = new System.Drawing.Point(12, 294);
             this.DeleteQuizButton.Name = "DeleteQuizButton";
-            this.DeleteQuizButton.Size = new System.Drawing.Size(400, 44);
+            this.DeleteQuizButton.Size = new System.Drawing.Size(200, 23);
             this.DeleteQuizButton.TabIndex = 4;
             this.DeleteQuizButton.Text = "Usuń";
             this.DeleteQuizButton.UseVisualStyleBackColor = true;
@@ -97,17 +92,17 @@
             // SelectedLabel
             // 
             this.SelectedLabel.AutoSize = true;
-            this.SelectedLabel.Location = new System.Drawing.Point(24, 413);
-            this.SelectedLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.SelectedLabel.Location = new System.Drawing.Point(12, 215);
             this.SelectedLabel.Name = "SelectedLabel";
-            this.SelectedLabel.Size = new System.Drawing.Size(0, 25);
+            this.SelectedLabel.Size = new System.Drawing.Size(0, 13);
             this.SelectedLabel.TabIndex = 5;
             // 
             // InitialForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 688);
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.ClientSize = new System.Drawing.Size(218, 358);
             this.Controls.Add(this.SelectedLabel);
             this.Controls.Add(this.DeleteQuizButton);
             this.Controls.Add(this.EditQuizButton);
@@ -115,7 +110,6 @@
             this.Controls.Add(this.AddQuizButton);
             this.Controls.Add(this.RunQuizButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "InitialForm";

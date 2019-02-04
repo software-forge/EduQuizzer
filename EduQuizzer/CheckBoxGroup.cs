@@ -1,10 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace EduQuizzer
 {
-    public enum CheckBoxGroupBehavior { SINGLE_SELECTION, MULTI_SELECTION }
+    public enum CheckBoxGroupBehavior { SingleSelection, MultiSelection }
+
+    public class CheckedBoxesChangedEventArgs : EventArgs
+    {
+        public List<int> Selections { get; private set; }
+
+        public CheckedBoxesChangedEventArgs(List <int> selections) : base()
+        {
+            Selections = selections;
+        }
+    }
 
     public class GroupedCheckBox : CheckBox
     {
@@ -37,7 +48,8 @@ namespace EduQuizzer
 
         public CheckBoxGroupBehavior Behavior { get; private set; }
 
-        private int old_selection;
+        public event EventHandler <CheckedBoxesChangedEventArgs> CheckedBoxesChangedEvent;
+        public delegate void CheckedBoxesChangedDelegate(object sender, CheckedBoxesChangedEventArgs e);
 
         public CheckBoxGroup(int checkboxes, CheckBoxGroupBehavior behavior)
         {
@@ -49,22 +61,16 @@ namespace EduQuizzer
             for (int i = 0; i < checkboxes; i++)
             {
                 CheckBoxes.Add(new GroupedCheckBox(i));
-
-                if(Behavior == CheckBoxGroupBehavior.SINGLE_SELECTION)
-                {
-                    CheckBoxes[i].CheckedChanged += SingleSelectionChanged;
-                    old_selection = -1;
-                }
-                
-                if (Behavior == CheckBoxGroupBehavior.MULTI_SELECTION)
-                    CheckBoxes[i].CheckedChanged += MultiSelectionChanged;
+                CheckBoxes[i].CheckedChanged += SelectionChanged;
             }
+
+            CheckedBoxesChangedEvent += PrintIndices;
         }
 
-        public CheckBoxGroup(int checkboxes, List <int> default_checked, CheckBoxGroupBehavior behavior)
+        public CheckBoxGroup(int checkboxes, List <int> selected_indices, CheckBoxGroupBehavior behavior)
         {
             CheckBoxes = new List <GroupedCheckBox> (checkboxes);
-            SelectedIndices = default_checked;
+            SelectedIndices = selected_indices;
 
             Behavior = behavior;
 
@@ -72,68 +78,84 @@ namespace EduQuizzer
             {
                 CheckBoxes.Add(new GroupedCheckBox(i));
 
-                if (Behavior == CheckBoxGroupBehavior.SINGLE_SELECTION)
-                {
-                    CheckBoxes[i].CheckedChanged += SingleSelectionChanged;
-                    old_selection = -1;
-                }
+                if (SelectedIndices.Contains(i))
+                    CheckBoxes[i].Checked = true;
 
-                if (Behavior == CheckBoxGroupBehavior.MULTI_SELECTION)
-                    CheckBoxes[i].CheckedChanged += MultiSelectionChanged;
+                CheckBoxes[i].CheckedChanged += SelectionChanged;
+            }
+
+            CheckedBoxesChangedEvent += PrintIndices;
+        }
+
+        // Debug
+        public void PrintIndices(object sender, CheckedBoxesChangedEventArgs e)
+        {
+            if (Debugger.IsAttached)
+            {
+                Debug.Write("Selected indices:");
+                foreach (int i in SelectedIndices)
+                {
+                    Debug.Write(string.Format(" {0} ", i));
+                }
+                Debug.WriteLine("");
             }
         }
 
-        private void MultiSelectionChanged(object sender, EventArgs e)
+        public void SelectionChanged(object sender, EventArgs e)
         {
+            GroupedCheckBox g = sender as GroupedCheckBox;
 
-            foreach (GroupedCheckBox g in CheckBoxes)
-                if (g.Checked)
-                    if(!SelectedIndices.Contains(g.Index))
-                        SelectedIndices.Add(g.Index);
-                    
-            //Debug.Write("multi selected indices: ");
-            //foreach (int i in SelectedIndices)
-            //    Debug.Write(string.Format("{0} ", i));
-            //Debug.WriteLine("");
-        }
-
-        private void SingleSelectionChanged(object sender, EventArgs e)
-        {
-            SelectedIndices.Clear();
-
-            bool none_checked = true;
-            foreach (GroupedCheckBox g in CheckBoxes)
+            if (Behavior == CheckBoxGroupBehavior.SingleSelection)
+            {
                 if (g.Checked)
                 {
-                    none_checked = false;
-                    break;
-                }
-
-            if (none_checked)
-            {
-                old_selection = -1;
-                return;
-            }
-
-            if(old_selection != -1)
-            {
-                CheckBoxes[old_selection].Checked = false;
-                CheckBoxes[old_selection].Enabled = true;
-            }
-            
-            foreach(GroupedCheckBox g in CheckBoxes)
-                if (g.Checked)
-                {
+                    foreach (GroupedCheckBox checkBox in CheckBoxes)
+                    {
+                        if (checkBox.Index != g.Index)
+                        {
+                            checkBox.Checked = false;
+                            checkBox.Enabled = true;
+                        }
+                    }
                     g.Enabled = false;
-                    old_selection = g.Index;
-
+                    SelectedIndices.Clear();
                     SelectedIndices.Add(g.Index);
                 }
+            }
 
-            //Debug.Write("single selected indices: ");
-            //foreach (int i in SelectedIndices)
-            //    Debug.Write(string.Format("{0} ", i));
-            //Debug.WriteLine("");
+            if(Behavior == CheckBoxGroupBehavior.MultiSelection)
+            {
+                if(g.Checked)
+                {
+                    if (!SelectedIndices.Contains(g.Index))
+                    {
+                        SelectedIndices.Add(g.Index);
+                    }
+                }
+                else
+                {
+                    int selection_index = -1;
+
+                    for(int i = 0; i < SelectedIndices.Count; i++)
+                    {
+                        if(SelectedIndices[i] == g.Index)
+                        {
+                            selection_index = i;
+                            break;
+                        }
+                    }
+
+                    if(selection_index > -1)
+                    {
+                        SelectedIndices.RemoveAt(selection_index);
+                    }
+                }
+            }
+
+            if(CheckedBoxesChangedEvent != null)
+            {
+                CheckedBoxesChangedEvent.Invoke(this, new CheckedBoxesChangedEventArgs(SelectedIndices));
+            }
         }
 
         public void AddToPanel(Panel p, int left, int top, int offset)
@@ -147,7 +169,7 @@ namespace EduQuizzer
                 {
                     g.Checked = true;
 
-                    if(Behavior == CheckBoxGroupBehavior.SINGLE_SELECTION)
+                    if(Behavior == CheckBoxGroupBehavior.SingleSelection)
                         g.Enabled = false;
                 }
 

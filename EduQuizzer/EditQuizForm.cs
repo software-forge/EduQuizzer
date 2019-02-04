@@ -183,7 +183,7 @@ namespace EduQuizzer
 
             if(q is MultiSelectionQuestion)
             {
-                CheckBoxGroup = new CheckBoxGroup(q.AnswersCapacity, q.CorrectAnswers, CheckBoxGroupBehavior.MULTI_SELECTION);
+                CheckBoxGroup = new CheckBoxGroup(q.AnswersCapacity, q.CorrectAnswers, CheckBoxGroupBehavior.MultiSelection);
 
                 //Debug.Write("Indices passed to CheckBox group: ");
                 //foreach (int i in CheckBoxGroup.SelectedIndices)
@@ -193,7 +193,7 @@ namespace EduQuizzer
 
             if(q is SingleSelectionQuestion || q is BinaryQuestion)
             {
-                CheckBoxGroup = new CheckBoxGroup(q.AnswersCapacity, q.CorrectAnswers, CheckBoxGroupBehavior.SINGLE_SELECTION);
+                CheckBoxGroup = new CheckBoxGroup(q.AnswersCapacity, q.CorrectAnswers, CheckBoxGroupBehavior.SingleSelection);
             }
 
             // Dodanie kontrolek do panelu

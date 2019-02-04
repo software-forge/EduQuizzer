@@ -9,11 +9,11 @@ using System.Diagnostics;
 
 namespace EduQuizzer
 {
-    public class SelectedButtonChangedArgs : EventArgs
+    public class SelectedButtonChangedEventArgs : EventArgs
     {
         public int Selection { get; private set; }
 
-        public SelectedButtonChangedArgs(int selection) : base()
+        public SelectedButtonChangedEventArgs(int selection) : base()
         {
             Selection = selection;
         }
@@ -101,19 +101,22 @@ namespace EduQuizzer
             }
         }
 
-        public event EventHandler <SelectedButtonChangedArgs> SelectionChangedEvent;
-        public delegate void SelectedButtonChangedDelegate(object sender, SelectedButtonChangedArgs e);
+        public event EventHandler<SelectedButtonChangedEventArgs> SelectedButtonChangedEvent;
+        public delegate void SelectedButtonChangedDelegate(object sender, SelectedButtonChangedEventArgs e);
 
         public ButtonGroup(int buttons)
         {
             if (buttons < 0)
                 throw new ArgumentOutOfRangeException();
+
             Buttons = new List<GroupedButton>(buttons);
+
             for(int i = 0; i < buttons; i++)
             {
                 Buttons.Add(new GroupedButton(i));
                 Buttons[i].Click += ButtonClicked;
             }
+
             Buttons[0].Selected = true;
         }
 
@@ -122,24 +125,36 @@ namespace EduQuizzer
             GroupedButton g = sender as GroupedButton;
 
             if(SelectedIndex != g.Index)
+            {
                 Select(g.Index);
+            }
         }
 
         public void Select(int button)
         {
             if (button < 0 || (button > (ButtonsCount - 1)))
                 throw new ArgumentOutOfRangeException();
+
             int selected = SelectedIndex;
+
             if(selected > -1)
+            {
                 Buttons[selected].Selected = false;
+            }
             Buttons[button].Selected = true;
+
             Repaint();
-            SelectionChangedEvent.Invoke(this, new SelectedButtonChangedArgs(SelectedIndex));
+
+            if(SelectedButtonChangedEvent != null)
+            {
+                SelectedButtonChangedEvent.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
+            }
         }
 
         public void SelectNext()
         {
             int selected = SelectedIndex;
+
             if(selected < (ButtonsCount - 1))
             {
                 if (selected > -1)
@@ -151,20 +166,31 @@ namespace EduQuizzer
                 {
                     Buttons[0].Selected = true;
                 }
+
                 Repaint();
-                SelectionChangedEvent.Invoke(this, new SelectedButtonChangedArgs(SelectedIndex));
+
+                if(SelectedButtonChangedEvent != null)
+                {
+                    SelectedButtonChangedEvent.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
+                }
             }
         }
 
         public void SelectPrevious()
         {
             int selected = SelectedIndex;
+
             if(selected > 0)
             {
                 Buttons[selected].Selected = false;
                 Buttons[selected - 1].Selected = true;
+
                 Repaint();
-                SelectionChangedEvent.Invoke(this, new SelectedButtonChangedArgs(SelectedIndex));
+
+                if(SelectedButtonChangedEvent != null)
+                {
+                    SelectedButtonChangedEvent.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
+                }
             }
         }
 
