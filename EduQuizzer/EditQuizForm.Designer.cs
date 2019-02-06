@@ -40,6 +40,9 @@
             this.SelectedQuestionLabel = new System.Windows.Forms.Label();
             this.NegativePointsCheckbox = new System.Windows.Forms.CheckBox();
             this.TimeLimitedCheckbox = new System.Windows.Forms.CheckBox();
+            this.MinutesUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.MinutesUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // SaveQuizButton
@@ -145,7 +148,7 @@
             // TimeLimitedCheckbox
             // 
             this.TimeLimitedCheckbox.AutoSize = true;
-            this.TimeLimitedCheckbox.Location = new System.Drawing.Point(278, 391);
+            this.TimeLimitedCheckbox.Location = new System.Drawing.Point(400, 390);
             this.TimeLimitedCheckbox.Name = "TimeLimitedCheckbox";
             this.TimeLimitedCheckbox.Size = new System.Drawing.Size(133, 17);
             this.TimeLimitedCheckbox.TabIndex = 16;
@@ -153,12 +156,51 @@
             this.TimeLimitedCheckbox.UseVisualStyleBackColor = true;
             this.TimeLimitedCheckbox.CheckedChanged += new System.EventHandler(this.TimeLimitedCheckedChanged);
             // 
+            // MinutesUpDown
+            // 
+            this.MinutesUpDown.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.MinutesUpDown.Location = new System.Drawing.Point(539, 390);
+            this.MinutesUpDown.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.MinutesUpDown.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.MinutesUpDown.Name = "MinutesUpDown";
+            this.MinutesUpDown.Size = new System.Drawing.Size(40, 20);
+            this.MinutesUpDown.TabIndex = 17;
+            this.MinutesUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.MinutesUpDown.ValueChanged += new System.EventHandler(this.MinutesSettingChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(585, 392);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "minut";
+            // 
             // EditQuizForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(629, 419);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.MinutesUpDown);
             this.Controls.Add(this.TimeLimitedCheckbox);
             this.Controls.Add(this.NegativePointsCheckbox);
             this.Controls.Add(this.SelectedQuestionLabel);
@@ -178,6 +220,7 @@
             this.Text = "Edycja quizu";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuizEditorFormClosing);
             this.Load += new System.EventHandler(this.QuizEditorFormLoad);
+            ((System.ComponentModel.ISupportInitialize)(this.MinutesUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -197,5 +240,7 @@
         private System.Windows.Forms.Label SelectedQuestionLabel;
         private System.Windows.Forms.CheckBox NegativePointsCheckbox;
         private System.Windows.Forms.CheckBox TimeLimitedCheckbox;
+        private System.Windows.Forms.NumericUpDown MinutesUpDown;
+        private System.Windows.Forms.Label label3;
     }
 }

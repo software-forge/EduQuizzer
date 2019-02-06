@@ -7,63 +7,93 @@ using System.Windows.Forms;
 
 namespace EduQuizzer.Timing
 {
-    // Argumenty zdarzenia końca odliczania
-    public class TimeSettingChangedEventArgs : EventArgs
-    {
-
-    }
-
-    // struktura czy klasa?
-    public struct TimeSetting
-    {
-        public int hours;
-        public int minutes;
-    }
-
-    // Ta klasa wykonuje odliczanie i wywołuje zdarzenie
     public class CountdownTimer
     {
-        private Timer Timer { get; set; }
+        public Timer Timer { get; private set; }
 
-        public CountdownTimer()
+        public int FullMinutes { get; private set; }
+
+        public int MinutesLeft { get; private set; }
+        public int SecondsLeft { get; private set; }
+
+        public event EventHandler <EventArgs> CountdownFinished;
+        public event EventHandler <EventArgs> TimerTicked;
+
+        public CountdownTimer(int minutes)
         {
+            FullMinutes = minutes;
 
-        }
-    }
+            MinutesLeft = FullMinutes;
+            SecondsLeft = 0;
 
-    // Panel nastawiania czasu
-    public class TimePicker : Panel
-    {
-        public NumericUpDown HoursUpDown { get; set; }
-        public NumericUpDown MinutesUpDown { get; set; }
-
-        public event EventHandler<TimeSettingChangedEventArgs> TimeSettingChanged;
-        public delegate void TimeSettingChangedDelegate(object sender, TimeSettingChangedEventArgs e);
-
-        public TimePicker()
-        {
-            HoursUpDown = new NumericUpDown();
-            HoursUpDown.Minimum = 0;
-            HoursUpDown.Maximum = 5;
-            HoursUpDown.Increment = 1;
-
-            MinutesUpDown = new NumericUpDown();
-            MinutesUpDown.Minimum = 0;
-            MinutesUpDown.Maximum = 55;
-            MinutesUpDown.Increment = 5;
-
-            HoursUpDown.ValueChanged += HoursChanged;
-            MinutesUpDown.ValueChanged += MinutesChanged;
+            Timer = new Timer();
+            Timer.Interval = 1000;
+            Timer.Tick += TimerTick;
         }
 
-        public void HoursChanged(object sender, EventArgs e)
+        public void Start()
         {
-
+            if(!Timer.Enabled)
+            {
+                Timer.Start();
+            }
         }
 
-        public void MinutesChanged(object sender, EventArgs e)
+        public void Stop()
         {
+            if(Timer.Enabled)
+            {
+                Timer.Stop();
+            }
+        }
 
+        public void Reset()
+        {
+            if(Timer.Enabled)
+            {
+                Timer.Stop();
+            }
+
+            MinutesLeft = FullMinutes;
+            SecondsLeft = 0;
+        }
+
+        public void Reset(int minutes)
+        {
+            if(Timer.Enabled)
+            {
+                Timer.Stop();
+            }
+
+            FullMinutes = minutes;
+            MinutesLeft = FullMinutes;
+            SecondsLeft = 0;
+        }
+
+        public void TimerTick(object sender, EventArgs e)
+        {
+            SecondsLeft--;
+
+            if(SecondsLeft < 0)
+            {
+                SecondsLeft = 59;
+                MinutesLeft--;
+
+                if(MinutesLeft < 0)
+                {
+                    Reset();
+
+                    if (CountdownFinished != null)
+                    {
+                        CountdownFinished.Invoke(this, new EventArgs());
+                    }
+                }
+            }
+
+            if(TimerTicked != null)
+            {
+                TimerTicked.Invoke(this, new EventArgs());
+            }
         }
     }
 }

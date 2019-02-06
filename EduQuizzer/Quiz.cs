@@ -290,8 +290,6 @@ namespace EduQuizzer
     {
         public const int MaxQuestions = 30;
 
-        public TimeSpan TimeLimit { get; private set; }
-
         private string _title;
         public string Title
         {
@@ -309,7 +307,28 @@ namespace EduQuizzer
         }
 
         public bool NegativePoints { get; set; }
+
         public bool TimeLimited { get; set; }
+
+        private int time_limit;
+
+        /// <summary>
+        /// Ograniczenie czasowe quizu w minutach
+        /// </summary>
+        public int TimeLimit
+        {
+            get
+            {
+                return time_limit;
+            }
+            set
+            {
+                if (value >= 5 && value <= 60 && value % 5 == 0)
+                {
+                    time_limit = value;
+                }
+            }
+        }
 
         public List <Question> Questions { get; set; }
         public int QuestionsCount
@@ -325,6 +344,7 @@ namespace EduQuizzer
             Title = "Nowy quiz";
             Questions = new List <Question>();
             NegativePoints = false;
+            TimeLimit = 5;
             TimeLimited = false;
         }
 

@@ -32,7 +32,17 @@ namespace EduQuizzer
             EditedQuestionIndex = -1; // Wartość domyślna, żaden element listy nie zaznaczony
 
             NegativePointsCheckbox.Checked = q.NegativePoints;
-            TimeLimitedCheckbox.Checked = q.TimeLimited;
+
+            if(q.TimeLimited)
+            {
+                TimeLimitedCheckbox.Checked = true;
+                MinutesUpDown.Enabled = true;
+            }
+            else
+            {
+                TimeLimitedCheckbox.Checked = false;
+                MinutesUpDown.Enabled = false;
+            }
         }
 
         /*
@@ -273,7 +283,37 @@ namespace EduQuizzer
 
         private void TimeLimitedCheckedChanged(object sender, EventArgs e)
         {
-            EditedQuiz.TimeLimited = TimeLimitedCheckbox.Checked;
+            CheckBox checkBox = sender as CheckBox;
+
+            EditedQuiz.TimeLimited = checkBox.Checked;
+
+            if(checkBox.Checked)
+            {
+                MinutesUpDown.Enabled = true;
+                MinutesUpDown.Value = EditedQuiz.TimeLimit;
+            }
+            else
+            {
+                MinutesUpDown.Enabled = false;
+                MinutesUpDown.Value = MinutesUpDown.Minimum;
+            }
+
+            if (Debugger.IsAttached)
+            {
+                Debug.WriteLine(string.Format("Time limited: {0}", EditedQuiz.TimeLimited));
+            }
+        }
+
+        private void MinutesSettingChanged(object sender, EventArgs e)
+        {
+            NumericUpDown minutesUpDown = sender as NumericUpDown;
+
+            EditedQuiz.TimeLimit = (int) minutesUpDown.Value;
+
+            if (Debugger.IsAttached)
+            {
+                Debug.WriteLine(string.Format("Time limit: {0}", EditedQuiz.TimeLimit));
+            }
         }
     }
 }
