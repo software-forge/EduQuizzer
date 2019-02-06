@@ -76,6 +76,7 @@
     <Compile Include="RunQuizForm.Designer.cs">
       <DependentUpon>RunQuizForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Timing.cs" />
     <EmbeddedResource Include="NewQuestionForm.resx">
       <DependentUpon>NewQuestionForm.cs</DependentUpon>
     </EmbeddedResource>

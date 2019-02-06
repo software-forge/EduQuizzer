@@ -21,6 +21,8 @@ namespace EduQuizzer
 
         public Question CurrentQuestion { get; private set; }
 
+        private List<Question> QuestionTemp { get; set; } // Przechowuje oryginalną kolejność pytań na liście
+
         private CheckBoxGroup CurrentQuestionAnswerCheckboxes { get; set; }
         private List <Label> CurrentQuestionAnswerLabels { get; set; }
 
@@ -30,6 +32,15 @@ namespace EduQuizzer
 
             RunningQuiz = q;
 
+            // Zachowanie oryginalnej kolejności pytań
+            QuestionTemp = new List<Question>();
+            foreach(Question question in RunningQuiz.Questions)
+            {
+                QuestionTemp.Add(question);
+            }
+
+            ShuffleQuestions();
+
             QuestionButtons = new ButtonGroup(RunningQuiz.QuestionsCount);
             Text = RunningQuiz.Title;
             SelectedQuestion = QuestionButtons.SelectedIndex;
@@ -38,7 +49,7 @@ namespace EduQuizzer
         private void RunQuizFormLoad(object sender, EventArgs e)
         {
             QuestionButtons.AddToPanel(ControlPanel, 10);
-            QuestionButtons.SelectedButtonChangedEvent += SelectedQuestionChanged;
+            QuestionButtons.SelectedButtonChanged += SelectedQuestionChanged;
 
             ReloadQuestionPanel();
         }
@@ -50,7 +61,6 @@ namespace EduQuizzer
             Question q = RunningQuiz.Questions[SelectedQuestion];
 
             QuizTitleLabel.Text = RunningQuiz.Title;
-            QuestionNumberLabel.Text = string.Format("Pytanie {0}", q.Number);
             QuestionContentBox.Text = q.Content;
 
             if(q is SingleSelectionQuestion || q is BinaryQuestion)
@@ -89,7 +99,6 @@ namespace EduQuizzer
             }
 
             QuestionPanel.Controls.Add(QuizTitleLabel);
-            QuestionPanel.Controls.Add(QuestionNumberLabel);
             QuestionPanel.Controls.Add(QuestionContentBox);
             QuestionPanel.Controls.Add(QuestionTypeLabel);
 
@@ -114,7 +123,21 @@ namespace EduQuizzer
             QuestionButtons.SelectPrevious();
         }
 
-        
+        private void ShuffleQuestions()
+        {
+            Random random = new Random();
+
+            // Potasowanie referencji do obiektów pytań w liście RunningQuiz.Questions
+            for(int i = 0; i < RunningQuiz.QuestionsCount; i++)
+            {
+                int position = random.Next(RunningQuiz.QuestionsCount - 2);
+
+                Question q = RunningQuiz.Questions[position + 1];
+                RunningQuiz.Questions[position + 1] = RunningQuiz.Questions[position];
+                RunningQuiz.Questions[position] = q;
+            }
+        }
+
         private void EndQuiz(object sender, EventArgs e)
         {
             if(sender is Button)
@@ -126,7 +149,7 @@ namespace EduQuizzer
                 if (confirm == DialogResult.OK)
                 {
                     // Punktacja quizu i wyświetlenie okna dialogowego z wynikiem
-                    int score = RunningQuiz.Score();
+                    int score = RunningQuiz.Score(RunningQuiz.NegativePoints);
                     int max_points = RunningQuiz.MaxPoints();
                     int percent = score * 100 / max_points;
 
@@ -135,12 +158,18 @@ namespace EduQuizzer
                 }
             }
 
-            // TODO
-            if(sender is Timer)
+            /*
+             *
+             *  TODO - zakończenie quizu poprzez zdarzenie zakończenia odmierzania czasu 
+             *
+            */
+
+            // Przywrócenie oryginalnej kolejności listy pytań
+            RunningQuiz.Questions.Clear();
+            foreach(Question question in QuestionTemp)
             {
-                // Zakończenie quizu poprzez zdarzenie timera (koniec czasu)
+                RunningQuiz.Questions.Add(question);
             }
         }
-
     }
 }

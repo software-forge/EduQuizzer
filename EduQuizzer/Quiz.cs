@@ -1,34 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace EduQuizzer
 {
     public interface IScorable
     {
-        int Score();
+        int Score(bool count_neg);
     }
 
     public abstract class Question : IScorable
     {
-        // Numer porządkowy pytania
-        private int _number;
+        private int number;
+
+        /// <summary>
+        /// Numer porządkowy pytania
+        /// </summary>
         public int Number
         {
             get
             {
-                return _number;
+                return number;
             }
             set
             {
                 if (value > 1)
-                    _number = value;
+                    number = value;
                 else
-                    _number = 1;
+                    number = 1;
             }
         }
 
-        // Treść pytania
         private string _content;
+
+        /// <summary>
+        /// Treść pytania
+        /// </summary>
         public string Content
         {
             get
@@ -44,8 +51,14 @@ namespace EduQuizzer
             }
         }
 
-        // Lista stringów z treściami możliwych odpowiedzi
+        /// <summary>
+        /// Lista treści możliwych odpowiedzi
+        /// </summary>
         public List <string> Answers;
+
+        /// <summary>
+        /// Przekierowanie do Answers.Capacity
+        /// </summary>
         public int AnswersCapacity
         {
             get
@@ -53,6 +66,10 @@ namespace EduQuizzer
                 return Answers.Capacity;
             }
         }
+
+        /// <summary>
+        /// Przekierowanie do Answers.Count
+        /// </summary>
         public int AnswersCount
         {
             get
@@ -60,26 +77,39 @@ namespace EduQuizzer
                 return Answers.Count;
             }
         }
+ 
+        protected List <int> correct_answers, given_answers;
 
-        // Lista indeksów poprawnych odpowiedzi
-        protected List <int> correct_answers;
+        /// <summary>
+        /// Lista indeksów poprawnych odpowiedzi
+        /// </summary>
         public abstract List <int> CorrectAnswers { get; set; }
 
-        // Lista indeksów odpowiedzi wskazanych jako poprawne
-        protected List<int> given_answers;
+        /// <summary>
+        ///  Lista indeksów odpowiedzi wskazanych jako poprawne
+        /// </summary>
         public abstract List <int> GivenAnswers { get; set; }
 
-        public void SetAnswer(string answer, int index)
+        /// <summary>
+        /// Ustawia treść odpowiedzi o wskazanym indeksie
+        /// </summary>
+        /// <param name="content">Treść odpowiedzi</param>
+        /// <param name="answer_index">Indeks odpowiedzi w liście Answers</param>
+        public void SetAnswerContent(string content, int answer_index)
         {
-            if(index > -1 && index < AnswersCapacity)
+            if(answer_index > -1 && answer_index < AnswersCapacity)
             {
-                if (answer.Equals(""))
-                    Answers[index] = string.Format("Odpowiedź {0}", index + 1);
+                if (content.Equals(""))
+                    Answers[answer_index] = string.Format("Odpowiedź {0}", answer_index + 1);
                 else
-                    Answers[index] = answer;
+                    Answers[answer_index] = content;
             }
         }
 
+        /// <summary>
+        /// Tworzy nowy obiekt klasy Question
+        /// </summary>
+        /// <param name="answer_count">Ilość możliwych do zaznaczenia odpowiedzi na pytanie</param>
         public Question(int answer_count)
         {
             Content = "Treść pytania...";
@@ -90,7 +120,12 @@ namespace EduQuizzer
             }
         }
 
-        public abstract int Score();
+        /// <summary>
+        /// Ilość punktów otrzymanych w wyniku odpowiedzi na pytanie
+        /// </summary>
+        /// <param name="negative">Informacja, czy przy punktacji stosować punkty ujemne</param>
+        /// <returns>Otrzymane punkty</returns>
+        public abstract int Score(bool negative);
     }
 
     public class MultiSelectionQuestion : Question
@@ -126,7 +161,7 @@ namespace EduQuizzer
             GivenAnswers = new List <int> (answer_count);
         }
         
-        public override int Score()
+        public override int Score(bool count_neg)
         {
             int score = 0;
 
@@ -135,9 +170,16 @@ namespace EduQuizzer
                 foreach (int givenAnswer in GivenAnswers)
                 {
                     if (CorrectAnswers.Contains(givenAnswer))
+                    {
                         score++;
+                    }
                     else
-                        score--;
+                    {
+                        if(count_neg)
+                        {
+                            score--;
+                        }
+                    }
                 }
 
                 GivenAnswers.Clear();
@@ -158,7 +200,9 @@ namespace EduQuizzer
             set
             {
                 if (value.Capacity == 1)
+                {
                     correct_answers = value;
+                }
             }
         }
         public override List <int> GivenAnswers
@@ -170,7 +214,9 @@ namespace EduQuizzer
             set
             {
                 if (value.Capacity == 1)
+                {
                     given_answers = value;
+                }
             }
         }
 
@@ -194,17 +240,23 @@ namespace EduQuizzer
             GivenAnswers = new List<int>(1);
         }
 
-        public override int Score()
+        public override int Score(bool count_neg)
         {
             int score = 0;
 
             if (GivenAnswers.Count == 1)
             {
                 if (CorrectAnswers.Contains(GivenAnswers[0]))
+                {
                     score++;
+                }
                 else
-                    score--;
-
+                {
+                    if(count_neg)
+                    {
+                        score--;
+                    }
+                }
                 GivenAnswers.Clear();
             }
 
@@ -216,14 +268,14 @@ namespace EduQuizzer
     {
         public BinaryQuestion() : base(2)
         {
-            SetAnswer("Tak", 0);
-            SetAnswer("Nie", 1);
+            SetAnswerContent("Tak", 0);
+            SetAnswerContent("Nie", 1);
         }
 
         public BinaryQuestion(bool affirmative) : base(2)
         {
-            SetAnswer("Tak", 0);
-            SetAnswer("Nie", 1);
+            SetAnswerContent("Tak", 0);
+            SetAnswerContent("Nie", 1);
 
             CorrectAnswers.Clear();
 
@@ -237,6 +289,8 @@ namespace EduQuizzer
     public class Quiz : IScorable
     {
         public const int MaxQuestions = 30;
+
+        public TimeSpan TimeLimit { get; private set; }
 
         private string _title;
         public string Title
@@ -254,6 +308,9 @@ namespace EduQuizzer
             }
         }
 
+        public bool NegativePoints { get; set; }
+        public bool TimeLimited { get; set; }
+
         public List <Question> Questions { get; set; }
         public int QuestionsCount
         {
@@ -267,6 +324,8 @@ namespace EduQuizzer
         {
             Title = "Nowy quiz";
             Questions = new List <Question>();
+            NegativePoints = false;
+            TimeLimited = false;
         }
 
         public int MaxPoints()
@@ -281,12 +340,12 @@ namespace EduQuizzer
             return points;
         }
 
-        public int Score()
+        public int Score(bool count_neg)
         {
             int score = 0;
             foreach (Question q in Questions)
             {
-                score += q.Score();
+                score += q.Score(count_neg);
             }
             return score;
         }

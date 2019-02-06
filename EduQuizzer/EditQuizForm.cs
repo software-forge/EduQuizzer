@@ -30,6 +30,9 @@ namespace EduQuizzer
 
             EditedQuiz = q;
             EditedQuestionIndex = -1; // Wartość domyślna, żaden element listy nie zaznaczony
+
+            NegativePointsCheckbox.Checked = q.NegativePoints;
+            TimeLimitedCheckbox.Checked = q.TimeLimited;
         }
 
         /*
@@ -222,14 +225,9 @@ namespace EduQuizzer
             EditedQuiz.Questions[EditedQuestionIndex].Content = ContentBox.Text;
 
             for (int i = 0; i < AnswerBoxes.Count; i++)
-                EditedQuiz.Questions[EditedQuestionIndex].SetAnswer(AnswerBoxes[i].Text, i);
+                EditedQuiz.Questions[EditedQuestionIndex].SetAnswerContent(AnswerBoxes[i].Text, i);
 
             EditedQuiz.Questions[EditedQuestionIndex].CorrectAnswers = CheckBoxGroup.SelectedIndices;
-
-            //Debug.Write("Indices selected in CheckBox group: ");
-            //foreach (int i in CheckBoxGroup.SelectedIndices)
-            //    Debug.Write(string.Format("{0} ", i));
-            //Debug.WriteLine("");
         }
 
         // DONE
@@ -265,6 +263,17 @@ namespace EduQuizzer
             Show();
             RefreshListView();
             RefreshLabel();
+        }
+
+        private void NegativePointsChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            EditedQuiz.NegativePoints = checkBox.Checked;
+        }
+
+        private void TimeLimitedCheckedChanged(object sender, EventArgs e)
+        {
+            EditedQuiz.TimeLimited = TimeLimitedCheckbox.Checked;
         }
     }
 }

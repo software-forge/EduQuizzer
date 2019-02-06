@@ -48,7 +48,7 @@ namespace EduQuizzer
 
         public CheckBoxGroupBehavior Behavior { get; private set; }
 
-        public event EventHandler <CheckedBoxesChangedEventArgs> CheckedBoxesChangedEvent;
+        public event EventHandler <CheckedBoxesChangedEventArgs> CheckedBoxesChanged;
         public delegate void CheckedBoxesChangedDelegate(object sender, CheckedBoxesChangedEventArgs e);
 
         public CheckBoxGroup(int checkboxes, CheckBoxGroupBehavior behavior)
@@ -64,7 +64,7 @@ namespace EduQuizzer
                 CheckBoxes[i].CheckedChanged += SelectionChanged;
             }
 
-            CheckedBoxesChangedEvent += PrintIndices;
+            CheckedBoxesChanged += PrintIndices;
         }
 
         public CheckBoxGroup(int checkboxes, List <int> selected_indices, CheckBoxGroupBehavior behavior)
@@ -84,7 +84,7 @@ namespace EduQuizzer
                 CheckBoxes[i].CheckedChanged += SelectionChanged;
             }
 
-            CheckedBoxesChangedEvent += PrintIndices;
+            CheckedBoxesChanged += PrintIndices;
         }
 
         // Debug
@@ -92,7 +92,7 @@ namespace EduQuizzer
         {
             if (Debugger.IsAttached)
             {
-                Debug.Write("Selected indices:");
+                Debug.Write("Selected indices (CheckboxGroup):");
                 foreach (int i in SelectedIndices)
                 {
                     Debug.Write(string.Format(" {0} ", i));
@@ -113,13 +113,18 @@ namespace EduQuizzer
                     {
                         if (checkBox.Index != g.Index)
                         {
-                            checkBox.Checked = false;
+                            checkBox.Checked = false;   // Wywołanie zdarzenia zmiany zaznaczeń można przenieść gdzieś tu (żeby nie wywoływać dwa razy)
                             checkBox.Enabled = true;
                         }
                     }
                     g.Enabled = false;
                     SelectedIndices.Clear();
                     SelectedIndices.Add(g.Index);
+
+                    if (CheckedBoxesChanged != null)
+                    {
+                        CheckedBoxesChanged.Invoke(this, new CheckedBoxesChangedEventArgs(SelectedIndices));
+                    }
                 }
             }
 
@@ -150,11 +155,11 @@ namespace EduQuizzer
                         SelectedIndices.RemoveAt(selection_index);
                     }
                 }
-            }
 
-            if(CheckedBoxesChangedEvent != null)
-            {
-                CheckedBoxesChangedEvent.Invoke(this, new CheckedBoxesChangedEventArgs(SelectedIndices));
+                if (CheckedBoxesChanged != null)
+                {
+                    CheckedBoxesChanged.Invoke(this, new CheckedBoxesChangedEventArgs(SelectedIndices));
+                }
             }
         }
 

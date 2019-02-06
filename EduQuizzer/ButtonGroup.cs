@@ -101,7 +101,7 @@ namespace EduQuizzer
             }
         }
 
-        public event EventHandler<SelectedButtonChangedEventArgs> SelectedButtonChangedEvent;
+        public event EventHandler<SelectedButtonChangedEventArgs> SelectedButtonChanged;
         public delegate void SelectedButtonChangedDelegate(object sender, SelectedButtonChangedEventArgs e);
 
         public ButtonGroup(int buttons)
@@ -118,6 +118,17 @@ namespace EduQuizzer
             }
 
             Buttons[0].Selected = true;
+
+            SelectedButtonChanged += PrintIndex;
+        }
+
+        // Debug
+        public void PrintIndex(object sender, SelectedButtonChangedEventArgs e)
+        {
+            if(Debugger.IsAttached)
+            {
+                Debug.WriteLine(string.Format("Selected index (ButtonGroup): {0}", e.Selection));
+            }
         }
 
         public void ButtonClicked(object sender, EventArgs e)
@@ -145,9 +156,9 @@ namespace EduQuizzer
 
             Repaint();
 
-            if(SelectedButtonChangedEvent != null)
+            if(SelectedButtonChanged != null)
             {
-                SelectedButtonChangedEvent.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
+                SelectedButtonChanged.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
             }
         }
 
@@ -169,9 +180,9 @@ namespace EduQuizzer
 
                 Repaint();
 
-                if(SelectedButtonChangedEvent != null)
+                if(SelectedButtonChanged != null)
                 {
-                    SelectedButtonChangedEvent.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
+                    SelectedButtonChanged.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
                 }
             }
         }
@@ -187,9 +198,9 @@ namespace EduQuizzer
 
                 Repaint();
 
-                if(SelectedButtonChangedEvent != null)
+                if(SelectedButtonChanged != null)
                 {
-                    SelectedButtonChangedEvent.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
+                    SelectedButtonChanged.Invoke(this, new SelectedButtonChangedEventArgs(SelectedIndex));
                 }
             }
         }

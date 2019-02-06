@@ -38,6 +38,8 @@
             this.EditQuestionPanel = new System.Windows.Forms.Panel();
             this.ContentLabel = new System.Windows.Forms.Label();
             this.SelectedQuestionLabel = new System.Windows.Forms.Label();
+            this.NegativePointsCheckbox = new System.Windows.Forms.CheckBox();
+            this.TimeLimitedCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // SaveQuizButton
@@ -129,12 +131,36 @@
             this.SelectedQuestionLabel.Size = new System.Drawing.Size(0, 13);
             this.SelectedQuestionLabel.TabIndex = 9;
             // 
+            // NegativePointsCheckbox
+            // 
+            this.NegativePointsCheckbox.AutoSize = true;
+            this.NegativePointsCheckbox.Location = new System.Drawing.Point(16, 390);
+            this.NegativePointsCheckbox.Name = "NegativePointsCheckbox";
+            this.NegativePointsCheckbox.Size = new System.Drawing.Size(96, 17);
+            this.NegativePointsCheckbox.TabIndex = 10;
+            this.NegativePointsCheckbox.Text = "Punkty ujemne";
+            this.NegativePointsCheckbox.UseVisualStyleBackColor = true;
+            this.NegativePointsCheckbox.CheckedChanged += new System.EventHandler(this.NegativePointsChanged);
+            // 
+            // TimeLimitedCheckbox
+            // 
+            this.TimeLimitedCheckbox.AutoSize = true;
+            this.TimeLimitedCheckbox.Location = new System.Drawing.Point(278, 391);
+            this.TimeLimitedCheckbox.Name = "TimeLimitedCheckbox";
+            this.TimeLimitedCheckbox.Size = new System.Drawing.Size(133, 17);
+            this.TimeLimitedCheckbox.TabIndex = 16;
+            this.TimeLimitedCheckbox.Text = "Ograniczenie czasowe";
+            this.TimeLimitedCheckbox.UseVisualStyleBackColor = true;
+            this.TimeLimitedCheckbox.CheckedChanged += new System.EventHandler(this.TimeLimitedCheckedChanged);
+            // 
             // EditQuizForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(629, 393);
+            this.ClientSize = new System.Drawing.Size(629, 419);
+            this.Controls.Add(this.TimeLimitedCheckbox);
+            this.Controls.Add(this.NegativePointsCheckbox);
             this.Controls.Add(this.SelectedQuestionLabel);
             this.Controls.Add(this.ContentLabel);
             this.Controls.Add(this.EditQuestionPanel);
@@ -169,5 +195,7 @@
         private System.Windows.Forms.Panel EditQuestionPanel;
         private System.Windows.Forms.Label ContentLabel;
         private System.Windows.Forms.Label SelectedQuestionLabel;
+        private System.Windows.Forms.CheckBox NegativePointsCheckbox;
+        private System.Windows.Forms.CheckBox TimeLimitedCheckbox;
     }
 }

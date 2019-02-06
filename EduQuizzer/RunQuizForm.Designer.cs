@@ -34,7 +34,6 @@
             this.previousButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.endQuizButton = new System.Windows.Forms.Button();
-            this.QuestionNumberLabel = new System.Windows.Forms.Label();
             this.QuizTitleLabel = new System.Windows.Forms.Label();
             this.QuestionContentBox = new System.Windows.Forms.TextBox();
             this.QuestionTypeLabel = new System.Windows.Forms.Label();
@@ -49,7 +48,6 @@
             this.QuestionPanel.Controls.Add(this.QuestionTypeLabel);
             this.QuestionPanel.Controls.Add(this.QuestionContentBox);
             this.QuestionPanel.Controls.Add(this.QuizTitleLabel);
-            this.QuestionPanel.Controls.Add(this.QuestionNumberLabel);
             this.QuestionPanel.Location = new System.Drawing.Point(6, 6);
             this.QuestionPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.QuestionPanel.Name = "QuestionPanel";
@@ -109,16 +107,6 @@
             this.endQuizButton.Text = "Zakończ quiz";
             this.endQuizButton.UseVisualStyleBackColor = true;
             this.endQuizButton.Click += new System.EventHandler(this.EndQuiz);
-            // 
-            // QuestionNumberLabel
-            // 
-            this.QuestionNumberLabel.AutoSize = true;
-            this.QuestionNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.QuestionNumberLabel.Location = new System.Drawing.Point(8, 46);
-            this.QuestionNumberLabel.Name = "QuestionNumberLabel";
-            this.QuestionNumberLabel.Size = new System.Drawing.Size(59, 17);
-            this.QuestionNumberLabel.TabIndex = 0;
-            this.QuestionNumberLabel.Text = "Pytanie ";
             // 
             // QuizTitleLabel
             // 
@@ -180,7 +168,6 @@
         private System.Windows.Forms.Button endQuizButton;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button previousButton;
-        private System.Windows.Forms.Label QuestionNumberLabel;
         private System.Windows.Forms.Label QuizTitleLabel;
         private System.Windows.Forms.TextBox QuestionContentBox;
         private System.Windows.Forms.Label QuestionTypeLabel;
